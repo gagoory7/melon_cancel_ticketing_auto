@@ -46,6 +46,12 @@ async function sortSeatList() {
     await appendRectsAsync(sortedRects);
 }
 
+function playSound() {
+    const audio = new Audio('https://www.soundjay.com/button/beep-07.wav'); // 소리 파일 경로
+    audio.play();
+}
+
+
 function simulateClick(ele) {
     let event = new MouseEvent("click", {
         bubbles: true,
@@ -74,11 +80,14 @@ function findRect() {
         var rect = $(`#ez_canvas rect:not([fill*='${disableColor}']):not([fill*='none'])`, iframe.contents());
         if (rect.length > 0) {
             simulateClick(rect[0]);
+            playSound(); // 티켓을 찾았을 때 소리 재생
             clearInterval(refreshTimer);
             clearInterval(findTimer);
         }
 
-        if (parent.data.selectedSeatCount > 0) iframe[0].contentWindow.goTicketType();
+        if (parent.data.selectedSeatCount > 0) {
+            iframe[0].contentWindow.goTicketType();
+        }
     }, 10);
 }
 
