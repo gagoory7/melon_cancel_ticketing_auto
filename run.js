@@ -46,9 +46,30 @@ async function sortSeatList() {
     await appendRectsAsync(sortedRects);
 }
 
+
+
 function playSound() {
-    const audio = new Audio('https://www.soundjay.com/button/beep-07.wav'); // 소리 파일 경로
-    audio.play();
+    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    const oscillator = audioContext.createOscillator();
+    const gainNode = audioContext.createGain();
+
+    // 음파 유형과 주파수 설정 (윈도우 효과음과 유사한 톤)
+    oscillator.type = 'sine'; // 사인파 (기본 음색)
+    oscillator.frequency.setValueAtTime(800, audioContext.currentTime); // 800Hz
+
+    // 볼륨 조절
+    gainNode.gain.setValueAtTime(50, audioContext.currentTime); // 낮은 볼륨
+
+    // 연결 및 재생
+    oscillator.connect(gainNode);
+    gainNode.connect(audioContext.destination);
+    oscillator.start();
+
+    // 200ms 후 소리를 멈춤
+    setTimeout(() => {
+        oscillator.stop();
+        audioContext.close();
+    }, 200);
 }
 
 
